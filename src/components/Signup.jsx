@@ -58,7 +58,7 @@ function Signup() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:5000/api/signup", {
+    fetch("https://ssc-backend.onrender.com/api/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
