@@ -5,7 +5,7 @@ export const fetchEventDetails = createAsyncThunk(
   async (eventTitle, thunkAPI) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/scanEvent/${eventTitle}`
+        `https://ssc-backend.onrender.com/api/scanEvent/${eventTitle}`
       );
       if (!response.ok) {
         const errorData = await response.json();
