@@ -180,7 +180,7 @@ function Dashboard() {
   }, [dispatch, events]);
 
   const handleLogout = () => {
-    fetch("http://localhost:5000/api/logout", {
+    fetch("https://ssc-backend.onrender.com/api/logout", {
       method: "POST",
       credentials: "include",
     })
@@ -287,7 +287,7 @@ function Dashboard() {
       hour12: true,
     });
 
-    fetch("http://localhost:5000/api/events", {
+    fetch("https://ssc-backend.onrender.com/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -395,7 +395,7 @@ function Dashboard() {
                     time: scanTime,
                   };
 
-                  fetch("http://localhost:5000/api/scanEvent", {
+                  fetch("https://ssc-backend.onrender.com/api/scanEvent", {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",

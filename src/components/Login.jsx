@@ -23,7 +23,7 @@ function Login() {
   const handleLogin = (event) => {
     event.preventDefault();
     setLoading(true);
-    fetch("http://localhost:5000/api/login", {
+    fetch("https://ssc-backend.onrender.com/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

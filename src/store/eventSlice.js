@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchEvents = createAsyncThunk("events/fetchEvents", async () => {
-  const response = await fetch("http://localhost:5000/api/events");
+  const response = await fetch("https://ssc-backend.onrender.com/api/events");
   const data = await response.json();
   console.log("data", data);
   return data;
