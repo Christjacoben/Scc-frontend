@@ -84,6 +84,9 @@ function Dashboard() {
   const [historyShow, setHistoryShow] = useState(true);
   const [dashHomeShow, setDashHomeShow] = useState(true);
   const [filterBy, setFilterBy] = useState(["all"]);
+  const [pendingFilter, setPendingFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
   const [formData, setFormData] = useState({
     eventTitle: "",
@@ -385,6 +388,7 @@ function Dashboard() {
                   const newEntry = {
                     eventTitle: selectedEvent.eventTitle,
                     name: parsedData.fullname,
+                    gender: parsedData.gender,
                     course: parsedData.course,
                     studentId: parsedData.studentId,
                     year: parsedData.year,
@@ -522,19 +526,53 @@ function Dashboard() {
     }
   };
 
-  const handleFilterChange = (e) => {
-    const { value, checked } = e.target;
+  const handleFilterChange = () => {
     setFilterBy((prevFilters) => {
-      if (value === "all") {
+      if (pendingFilter === "all") {
         return ["all"];
       }
 
-      const newFilters = checked
-        ? [...prevFilters.filter((f) => f !== "all"), value]
-        : prevFilters.filter((f) => f !== value);
+      const newFilters =
+        !prevFilters.includes(pendingFilter) && pendingFilter !== "all"
+          ? [...prevFilters.filter((f) => f !== "all"), pendingFilter]
+          : prevFilters.filter((f) => f !== pendingFilter);
 
       return newFilters.length === 0 ? ["all"] : newFilters;
     });
+  };
+
+  const handleSearch = () => {
+    if (!barSelectedEventDetails?.participants || searchQuery.trim() === "") {
+      setSearchResult([]);
+      return;
+    }
+
+    const lowerCaseQuery = searchQuery.toLowerCase();
+
+    const results = barSelectedEventDetails.participants.filter(
+      (participant) => {
+        const exactMatchFields = ["gender"];
+        const partialMatchFields = ["name", "course", "studentId", "year"];
+
+        const exactMatch = exactMatchFields.some((field) => {
+          return (
+            participant[field] &&
+            String(participant[field]).toLowerCase() === lowerCaseQuery
+          );
+        });
+
+        const partialMatch = partialMatchFields.some((field) => {
+          return (
+            participant[field] &&
+            String(participant[field]).toLowerCase().includes(lowerCaseQuery)
+          );
+        });
+
+        return exactMatch || partialMatch;
+      }
+    );
+
+    setSearchResult(results);
   };
 
   const getFilteredParticipants = () => {
@@ -553,7 +591,8 @@ function Dashboard() {
   };
 
   const filteredParticipants = getFilteredParticipants();
-
+  const participantsToDisplay =
+    searchResult.length > 0 ? searchResult : filteredParticipants;
   /*
 const handleFilterChange = (e) => {
   setFilterBy(e.target.value);
@@ -577,6 +616,7 @@ const filteredParticipants = getFilteredParticipants();
     const tableColumn = ["Name", "Student ID", "Course", "Year", "Time"];
     const tableRows = participant.map((participant) => [
       participant.name,
+      participant.gender,
       participant.studentId,
       participant.course,
       participant.year,
@@ -702,7 +742,7 @@ const filteredParticipants = getFilteredParticipants();
                 <p>No events to display in the bar graph.</p>
               )}
             </div>
-            {/*display all first name that has first scan per courses*/}
+
             <div className="user-indicator">
               <div className="user-content">
                 {barSelectedEventDetails ? (
@@ -711,60 +751,94 @@ const filteredParticipants = getFilteredParticipants();
                       Participants for {barSelectedEventDetails.eventTitle}
                     </h3>
                     <div className="user-content-div">
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="filter"
-                          value="all"
-                          checked={filterBy.includes("all")}
-                          onChange={handleFilterChange}
-                        />
-                        Show All
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="filter"
-                          value="name"
-                          checked={filterBy.includes("name")}
-                          onChange={handleFilterChange}
-                        />
-                        Name
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="filter"
-                          value="course"
-                          checked={filterBy.includes("course")}
-                          onChange={handleFilterChange}
-                        />
-                        Course
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="filter"
-                          value="studentId"
-                          checked={filterBy.includes("studentId")}
-                          onChange={handleFilterChange}
-                        />
-                        Student ID
-                      </label>
+                      <select
+                        name="filter"
+                        value={pendingFilter}
+                        onChange={(e) => setPendingFilter(e.target.value)}
+                      >
+                        <option value="all">Show All</option>
+                        <option value="name">Name</option>
+                        <option value="gender">Gender</option>
+                        <option value="course">Course</option>
+                        <option value="studentId">Student ID</option>
+                        <option value="year">Year</option>
+                        <option value="time">Time</option>
+                      </select>
+                      <button onClick={handleFilterChange}>Filter</button>
+
+                      <input
+                        type="text"
+                        placeholder="Search by ID, name, course, or year"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <button onClick={handleSearch}>Search</button>
                     </div>
-                    {filteredParticipants && filteredParticipants.length > 0 ? (
-                      <ul>
-                        {filteredParticipants.map((participant) => (
-                          <li key={participant._id}>
-                            {filterBy.includes("all")
-                              ? `${participant.name} - ${participant.course} - ID: ${participant.studentId} - Year: ${participant.year} - Time: ${participant.time}`
-                              : filterBy
-                                  .map((filter) => participant[filter])
-                                  .filter(Boolean)
-                                  .join(" - ")}
-                          </li>
-                        ))}
-                      </ul>
+
+                    {participantsToDisplay &&
+                    participantsToDisplay.length > 0 ? (
+                      <div className="participant-table-container">
+                        <table className="participant-table">
+                          <thead>
+                            <tr>
+                              {filterBy.includes("all") ||
+                              filterBy.includes("name") ? (
+                                <th>Name</th>
+                              ) : null}
+                              {filterBy.includes("all") ||
+                              filterBy.includes("gender") ? (
+                                <th>Gender</th>
+                              ) : null}
+                              {filterBy.includes("all") ||
+                              filterBy.includes("course") ? (
+                                <th>Course</th>
+                              ) : null}
+                              {filterBy.includes("all") ||
+                              filterBy.includes("studentId") ? (
+                                <th>Student ID</th>
+                              ) : null}
+                              {filterBy.includes("all") ||
+                              filterBy.includes("year") ? (
+                                <th>Year</th>
+                              ) : null}
+                              {filterBy.includes("all") ||
+                              filterBy.includes("time") ? (
+                                <th>Time</th>
+                              ) : null}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {participantsToDisplay.map((participant) => (
+                              <tr key={participant._id}>
+                                {filterBy.includes("all") ||
+                                filterBy.includes("name") ? (
+                                  <td>{participant.name}</td>
+                                ) : null}
+                                {filterBy.includes("all") ||
+                                filterBy.includes("gender") ? (
+                                  <td>{participant.gender}</td>
+                                ) : null}
+                                {filterBy.includes("all") ||
+                                filterBy.includes("course") ? (
+                                  <td>{participant.course}</td>
+                                ) : null}
+                                {filterBy.includes("all") ||
+                                filterBy.includes("studentId") ? (
+                                  <td>{participant.studentId}</td>
+                                ) : null}
+                                {filterBy.includes("all") ||
+                                filterBy.includes("year") ? (
+                                  <td>{participant.year}</td>
+                                ) : null}
+                                {filterBy.includes("all") ||
+                                filterBy.includes("time") ? (
+                                  <td>{participant.time}</td>
+                                ) : null}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     ) : (
                       <p>No participants found for this event.</p>
                     )}
@@ -877,6 +951,7 @@ const filteredParticipants = getFilteredParticipants();
                       <tr>
                         <th>Event</th>
                         <th>Name</th>
+                        <th>Gender</th>
                         <th>Course</th>
                         <th>Student ID</th>
                         <th>Year</th>
@@ -888,6 +963,7 @@ const filteredParticipants = getFilteredParticipants();
                         <tr key={index}>
                           <td>{data.eventTitle}</td>
                           <td>{data.name}</td>
+                          <td>{data.gender}</td>
                           <td>{data.course}</td>
                           <td>{data.studentId}</td>
                           <td>{data.year}</td>
@@ -908,6 +984,7 @@ const filteredParticipants = getFilteredParticipants();
                       <tr>
                         <th>Event</th>
                         <th>Name</th>
+                        <th>Gender</th>
                         <th>Course</th>
                         <th>Student ID</th>
                         <th>Year</th>
@@ -919,6 +996,7 @@ const filteredParticipants = getFilteredParticipants();
                         <tr key={participant._id}>
                           <td>{participant.eventTitle || eventTitle}</td>
                           <td>{participant.name}</td>
+                          <td>{participant.gender}</td>
                           <td>{participant.course}</td>
                           <td>{participant.studentId}</td>
                           <td>{participant.year}</td>
@@ -961,6 +1039,7 @@ const filteredParticipants = getFilteredParticipants();
                               <thead>
                                 <tr>
                                   <th>Name</th>
+                                  <th>Gender</th>
                                   <th>Student ID</th>
                                   <th>Course</th>
                                   <th>Year</th>
@@ -972,6 +1051,7 @@ const filteredParticipants = getFilteredParticipants();
                                   (participant) => (
                                     <tr key={participant._id}>
                                       <td>{participant.name}</td>
+                                      <td>{participant.gender}</td>
                                       <td>{participant.studentId}</td>
                                       <td>{participant.course}</td>
                                       <td>{participant.year}</td>
