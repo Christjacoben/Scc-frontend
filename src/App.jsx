@@ -9,13 +9,17 @@ import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import UserDashboard from "./components/UserDashboard";
 import LandingPage from "./components/LandingPage";
+import Restric from "./components/Restric";
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <Routes>
+           <Route exact path="/" element={<Restric />} />
+          {/*
           <Route exact path="/" element={<LandingPage />} />
+           */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
