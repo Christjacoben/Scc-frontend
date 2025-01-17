@@ -9,14 +9,14 @@ import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import UserDashboard from "./components/UserDashboard";
 import LandingPage from "./components/LandingPage";
-import Restric from "./components/Restric";
+import Restrict from "./components/Restric";
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <Routes>
-           <Route exact path="/" element={<Restric />} />
+           <Route exact path="/" element={<Restrict />} />
           {/*
           <Route exact path="/" element={<LandingPage />} />
            */}
