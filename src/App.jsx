@@ -8,8 +8,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import UserDashboard from "./components/UserDashboard";
-import LandingPage from "./components/LandingPage";
-import Restrict from "./components/Restric";
+//import LandingPage from "./components/LandingPage";
+import Restrict from "./components/Restrict";
 
 function App() {
   return (
