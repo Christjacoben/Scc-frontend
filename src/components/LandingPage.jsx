@@ -27,9 +27,9 @@ function LandingPage() {
         <div className="landing-header">
           <ul>
             <img src={Landinglogo} alt="landind-logo" />
-            <li onClick={downloadApp}>App</li>
-            <li onClick={gotoLogin}>Login</li>
-            <li onClick={gotoSignup}>Signup</li>
+            <li className="app-link" onClick={downloadApp}>App</li>
+            <li className="login-link" onClick={gotoLogin}>Login</li>
+            <li className="signup-link" onClick={gotoSignup}>Signup</li>
           </ul>
         </div>
         <div className="left-landing-con">
