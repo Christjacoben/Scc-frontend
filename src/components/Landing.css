@@ -210,13 +210,13 @@
   .landing-text {
     position: absolute;
     top: 18rem;
-    left: 3rem;
+    left: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 13.8px;
     color: #039229;
     font-style: inherit;
     z-index: 10;
