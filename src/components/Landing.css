@@ -160,3 +160,96 @@
       rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
   }
 }
+@media only screen and (max-width: 600px) {
+  .landing-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #bbe9db;
+  }
+  .landing-content {
+    display: flex;
+  }
+  .landing-header {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  .landing-header img {
+    top: 7rem;
+    left: 129px;
+    position: absolute;
+    margin-right: 62rem;
+    width: 7rem;
+    height: 7rem;
+  }
+  .landing-content ul {
+    display: flex;
+    margin-right: 3rem;
+    list-style-type: none;
+    float: right;
+  }
+  .landing-content li {
+    font-size: 20px;
+    font-weight: bold;
+    color: #039229;
+    margin: 10px;
+  }
+  .left-landing-con img {
+    width: 24.3rem;
+    height: 50.2rem;
+    z-index: -10;
+  }
+  .right-landing-con img {
+    width: 70.4rem;
+    height: 50.2rem;
+    z-index: -10;
+  }
+  .landing-text {
+    position: absolute;
+    top: 18rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: #039229;
+    font-style: inherit;
+    z-index: 10;
+  }
+  .landing-text p {
+    margin: 10px;
+  }
+  .landing-header {
+    position: absolute;
+  }
+  .get-landing {
+    position: absolute;
+    top: 30rem;
+    right: 60rem;
+  }
+  .get-landing button {
+    width: 10rem;
+    border: none;
+    padding: 20px;
+    border-radius: 30px;
+    background-color: #bbe9db;
+    color: #039229;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+      rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  }
+  .login-link,
+  .signup-link {
+    display: none;
+  }
+  .app-link {
+    position: absolute;
+    right: 1rem;
+  }
+}
