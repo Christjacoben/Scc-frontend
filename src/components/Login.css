@@ -6,7 +6,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: -8%;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
     rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
   background-color: white;
@@ -14,7 +13,7 @@
 }
 
 .form-main {
-  margin-top: 12rem;
+  margin-top: 1.8rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,7 +57,7 @@
 .link {
   text-decoration: none;
 }
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1920px) {
   .form {
     padding: 10px;
     width: 30rem;
