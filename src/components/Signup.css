@@ -44,7 +44,54 @@ select {
   color: white;
   border: none;
 }
+@media only screen and (min-width: 1920px) {
+  .maincon {
+    display: flex;
+    justify-content: center;
+  }
 
+  .formmain {
+    margin-top: 80px;
+    width: 33rem;
+    border-radius: 20px;
+    height: 47.5rem;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
+      rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+  }
+  .form-con {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 10px;
+  }
+  .form-con input,
+  select {
+    padding: 13px;
+    margin: 8px;
+    border-radius: 15px;
+    border: 1px solid gainsboro;
+  }
+  .form-con label {
+    margin-left: 6%;
+  }
+  .formmain img {
+    margin-left: 10.1rem;
+    margin-top: -10px;
+    margin-bottom: 5px;
+    width: 9rem;
+    height: 9rem;
+  }
+  .butt {
+    margin-left: 20px;
+    margin-top: 20px;
+    padding: 10px;
+    width: 90%;
+    border-radius: 15px;
+    background-color: #005792;
+    color: white;
+    border: none;
+  }
+}
 /*
     
     .maincon {
