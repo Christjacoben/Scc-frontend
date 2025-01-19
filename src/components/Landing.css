@@ -15,7 +15,7 @@
   right: 0;
 }
 .landing-header img {
-  margin-right: 65rem;
+  margin-right: 63rem;
   width: 4rem;
   height: 4rem;
 }
@@ -32,13 +32,13 @@
   margin: 10px;
 }
 .left-landing-con img {
-  width: 24.3rem;
-  height: 44.2rem;
+  width: 25.2rem;
+  height: 39.8rem;
   z-index: -10;
 }
 .right-landing-con img {
-  width: 70.4rem;
-  height: 44.2rem;
+  width: 60rem;
+  height: 39.8rem;
   z-index: -10;
 }
 .landing-text {
@@ -64,7 +64,7 @@
 .get-landing {
   position: absolute;
   top: 30rem;
-  right: 60rem;
+  right: 55rem;
 }
 .get-landing button {
   width: 10rem;
@@ -78,7 +78,7 @@
   box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
     rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1920px) {
   .landing-main {
     position: absolute;
     top: 0;
@@ -96,7 +96,7 @@
     right: 0;
   }
   .landing-header img {
-    margin-right: 65rem;
+    margin-right: 96rem;
     width: 4rem;
     height: 4rem;
   }
@@ -113,13 +113,13 @@
     margin: 10px;
   }
   .left-landing-con img {
-    width: 24.3rem;
-    height: 39.8rem;
+    width: 40.3rem;
+    height: 59.3rem;
     z-index: -10;
   }
   .right-landing-con img {
-    width: 61rem;
-    height: 39.8rem;
+    width: 79.4rem;
+    height: 59.3rem;
     z-index: -10;
   }
   .landing-text {
@@ -145,7 +145,7 @@
   .get-landing {
     position: absolute;
     top: 30rem;
-    right: 60rem;
+    right: 89rem;
   }
   .get-landing button {
     width: 10rem;
@@ -160,6 +160,7 @@
       rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
   }
 }
+
 @media only screen and (max-width: 600px) {
   .landing-main {
     position: absolute;
@@ -211,13 +212,13 @@
   .landing-text {
     position: absolute;
     top: 18rem;
-    left: 2rem;
+    left: 3rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 13.8px;
+    font-size: 14px;
     color: #039229;
     font-style: inherit;
     z-index: 10;
