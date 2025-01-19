@@ -167,7 +167,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #bbe9db;
   }
   .landing-content {
     display: flex;
@@ -201,11 +200,13 @@
     width: 24.3rem;
     height: 50.2rem;
     z-index: -10;
+    display: none;
   }
   .right-landing-con img {
     width: 70.4rem;
     height: 50.2rem;
     z-index: -10;
+    display: none;
   }
   .landing-text {
     position: absolute;
