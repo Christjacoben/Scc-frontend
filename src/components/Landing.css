@@ -15,7 +15,7 @@
   right: 0;
 }
 .landing-header img {
-  margin-right: 63rem;
+  margin-right: 67rem;
   width: 4rem;
   height: 4rem;
 }
@@ -218,7 +218,7 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 14px;
     color: #039229;
     font-style: inherit;
     z-index: 10;
