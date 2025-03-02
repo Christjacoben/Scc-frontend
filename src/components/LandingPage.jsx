@@ -11,11 +11,11 @@ function LandingPage() {
   const gotoLogin = () => {
     navigate("/login");
   };
-
+  /*
   const gotoSignup = () => {
     navigate("/signup");
   };
-
+*/
   const downloadApp = () => {
     const apkUrl = "/apk/app-release.apk";
     window.location.href = apkUrl;
@@ -29,7 +29,9 @@ function LandingPage() {
             <img src={Landinglogo} alt="landind-logo" />
             <li className="app-link" onClick={downloadApp}>App</li>
             <li className="login-link" onClick={gotoLogin}>Login</li>
+                {/*
             <li className="signup-link" onClick={gotoSignup}>Signup</li>
+               */}
           </ul>
         </div>
         <div className="left-landing-con">
