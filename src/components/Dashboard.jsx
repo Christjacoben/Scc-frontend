@@ -22,6 +22,7 @@ import { MdEventNote } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
 import { LuMonitorPause } from "react-icons/lu";
 import { IoIosCloseCircle } from "react-icons/io";
+import { RxExitFullScreen } from "react-icons/rx";
 import { FaHome } from "react-icons/fa";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -42,7 +43,7 @@ const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top",
+      position: "bottom",
     },
     title: {
       display: true,
@@ -52,7 +53,7 @@ const options = {
   scales: {
     y: {
       beginAtZero: true,
-      min: 0,
+      min: 1,
       max: 400,
       ticks: {
         stepSize: 1,
@@ -87,7 +88,7 @@ function Dashboard() {
   const [pendingFilter, setPendingFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-   const [historySearchQuery, setHistorySearchQuery] = useState("");
+  const [historySearchQuery, setHistorySearchQuery] = useState("");
   const [historySearchResult, setHistorySearchResult] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupEventDetails, setPopupEventDetails] = useState(null);
@@ -520,7 +521,7 @@ function Dashboard() {
     [barData, dispatch, events]
   );
 
- const handleEventClick = (eventTitle) => {
+  const handleEventClick = (eventTitle) => {
     console.log(`Fetching details for event: ${eventTitle}`);
     dispatch(fetchEventDetails(eventTitle));
     setPopupEventDetails(eventTitle);
@@ -672,7 +673,7 @@ const filteredParticipants = getFilteredParticipants();
     printWindow.close();
   };
 
-   const handleHistorySearch = () => {
+  const handleHistorySearch = () => {
     if (!eventDetails?.participants || historySearchQuery.trim() === "") {
       setHistorySearchResult([]);
       return;
@@ -713,8 +714,9 @@ const filteredParticipants = getFilteredParticipants();
     setIsPopupVisible(false);
     setPopupEventDetails(null);
   };
+
   return (
-     <div className={`main ${isPopupVisible ? "blur-background" : ""}`}>
+    <div className={`main ${isPopupVisible ? "blur-background" : ""}`}>
       <header className="header">
         <nav className="nav">
           <img src={NavLogo} alt="NavLogo" className="navlogo" />
