@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import "./Login.css";
 import Logo from "../assets/file.png";
+import { fetchUsers } from "../store/userSlice";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -13,8 +14,23 @@ function Login() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [adminExists, setAdminExists] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const users = useSelector((state) => state.users.users);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      const adminUser = users.find((user) => user.role === "admin");
+      if (adminUser) {
+        setAdminExists(true);
+      }
+    }
+  }, [users]);
 
   const handleInputChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
@@ -84,9 +100,15 @@ function Login() {
           <button className="button" type="submit" disabled={loading}>
             {loading ? "Loading..." : "Login"}
           </button>
-          <a className="link" href="signup" onClick={handleClickMe}>
-            Sign up
-          </a>
+          {!adminExists && (
+            <a
+              className="link"
+              href="signup"
+              onClick={() => navigate("/signup")}
+            >
+              Sign up
+            </a>
+          )}
         </form>
       </div>
     </div>
