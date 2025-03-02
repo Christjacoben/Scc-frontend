@@ -53,7 +53,7 @@ const options = {
     y: {
       beginAtZero: true,
       min: 0,
-      max: 50,
+      max: 400,
       ticks: {
         stepSize: 1,
       },
@@ -87,6 +87,10 @@ function Dashboard() {
   const [pendingFilter, setPendingFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+   const [historySearchQuery, setHistorySearchQuery] = useState("");
+  const [historySearchResult, setHistorySearchResult] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupEventDetails, setPopupEventDetails] = useState(null);
 
   const [formData, setFormData] = useState({
     eventTitle: "",
@@ -516,14 +520,11 @@ function Dashboard() {
     [barData, dispatch, events]
   );
 
-  const handleEventClick = (eventTitle) => {
-    if (expandedEvent === eventTitle) {
-      setExpandedEvent(null);
-    } else {
-      console.log(`Fetching details for event: ${eventTitle}`);
-      dispatch(fetchEventDetails(eventTitle));
-      setExpandedEvent(eventTitle);
-    }
+ const handleEventClick = (eventTitle) => {
+    console.log(`Fetching details for event: ${eventTitle}`);
+    dispatch(fetchEventDetails(eventTitle));
+    setPopupEventDetails(eventTitle);
+    setIsPopupVisible(true);
   };
 
   const handleFilterChange = () => {
@@ -671,8 +672,49 @@ const filteredParticipants = getFilteredParticipants();
     printWindow.close();
   };
 
+   const handleHistorySearch = () => {
+    if (!eventDetails?.participants || historySearchQuery.trim() === "") {
+      setHistorySearchResult([]);
+      return;
+    }
+
+    const lowerCaseQuery = historySearchQuery.toLowerCase();
+
+    const results = eventDetails.participants.filter((participant) => {
+      const exactMatchFields = ["gender"];
+      const partialMatchFields = ["name", "course", "studentId", "year"];
+
+      const exactMatch = exactMatchFields.some((field) => {
+        return (
+          participant[field] &&
+          String(participant[field]).toLowerCase() === lowerCaseQuery
+        );
+      });
+
+      const partialMatch = partialMatchFields.some((field) => {
+        return (
+          participant[field] &&
+          String(participant[field]).toLowerCase().includes(lowerCaseQuery)
+        );
+      });
+
+      return exactMatch || partialMatch;
+    });
+
+    setHistorySearchResult(results);
+  };
+
+  const handleClearSearch = () => {
+    setHistorySearchQuery("");
+    setHistorySearchResult([]);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupVisible(false);
+    setPopupEventDetails(null);
+  };
   return (
-    <div className="main">
+     <div className={`main ${isPopupVisible ? "blur-background" : ""}`}>
       <header className="header">
         <nav className="nav">
           <img src={NavLogo} alt="NavLogo" className="navlogo" />
@@ -681,42 +723,33 @@ const filteredParticipants = getFilteredParticipants();
       </header>
       <main className="main-content">
         <div className="side-content">
-          <FaHome
-            size={40}
-            color="red"
-            className="icons"
-            onClick={handleDashHomeShow}
-          />
-          <MdEventNote
-            size={40}
-            color="green"
-            className="icons"
-            onClick={handleShowEventList}
-          />
-          <RiDashboard2Line
-            size={40}
-            color="#f96d00"
-            className="icons"
-            onClick={handleBarShow}
-          />
-          <IoIosCreate
-            size={40}
-            color="#596e79"
-            className="icons"
+          <div onClick={handleDashHomeShow} className="side-content-label">
+            <FaHome size={40} color="red" className="icons" />
+            <p className="home">Home</p>
+          </div>
+          <div onClick={handleShowEventList} className="side-content-label">
+            <MdEventNote size={40} color="green" className="icons" />
+            <p className="scan">Scan Participant</p>
+          </div>
+          <div onClick={handleBarShow} className="side-content-label">
+            <RiDashboard2Line size={40} color="#f96d00" className="icons" />
+            <p className="vis">Visualization</p>
+          </div>
+          <div
             onClick={handleCreateAttendanceShow}
-          />
-          <LuMonitorPause
-            size={40}
-            color="#b5592a"
-            className="icons"
-            onClick={handleHistoryShow}
-          />
-          <TbLogout
-            size={40}
-            color="red"
-            className="icons"
-            onClick={handleLogout}
-          />
+            className="side-content-label"
+          >
+            <IoIosCreate size={40} color="#596e79" className="icons" />
+            <p className="create">Create Event</p>
+          </div>
+          <div onClick={handleHistoryShow} className="side-content-label">
+            <LuMonitorPause size={40} color="#b5592a" className="icons" />
+            <p className="evehistory">Events History</p>
+          </div>
+          <div onClick={handleLogout} className="side-content-label">
+            <TbLogout size={40} color="red" className="icons" />
+            <p className="logout-p">Logout</p>
+          </div>
         </div>
         {dashHomeShow && (
           <div className="dash-home">
@@ -1047,18 +1080,19 @@ const filteredParticipants = getFilteredParticipants();
                                 </tr>
                               </thead>
                               <tbody>
-                                {eventDetails.participants.map(
-                                  (participant) => (
-                                    <tr key={participant._id}>
-                                      <td>{participant.name}</td>
-                                      <td>{participant.gender}</td>
-                                      <td>{participant.studentId}</td>
-                                      <td>{participant.course}</td>
-                                      <td>{participant.year}</td>
-                                      <td>{participant.time}</td>
-                                    </tr>
-                                  )
-                                )}
+                                {(historySearchResult.length > 0
+                                  ? historySearchResult
+                                  : eventDetails.participants
+                                ).map((participant) => (
+                                  <tr key={participant._id}>
+                                    <td>{participant.name}</td>
+                                    <td>{participant.gender}</td>
+                                    <td>{participant.studentId}</td>
+                                    <td>{participant.course}</td>
+                                    <td>{participant.year}</td>
+                                    <td>{participant.time}</td>
+                                  </tr>
+                                ))}
                               </tbody>
                             </table>
                           </div>
@@ -1066,7 +1100,9 @@ const filteredParticipants = getFilteredParticipants();
                             onClick={() =>
                               handleDownloadPDF(
                                 eventItem.eventTitle,
-                                eventDetails.participants
+                                historySearchResult.length > 0
+                                  ? historySearchResult
+                                  : eventDetails.participants
                               )
                             }
                           >
@@ -1078,6 +1114,16 @@ const filteredParticipants = getFilteredParticipants();
                           >
                             Print
                           </button>
+                          <input
+                            type="text"
+                            placeholder="Search by ID, name, course, or year"
+                            value={historySearchQuery}
+                            onChange={(e) =>
+                              setHistorySearchQuery(e.target.value)
+                            }
+                          />
+                          <button onClick={handleClearSearch}>Clear</button>
+                          <button onClick={handleHistorySearch}>Search</button>
                         </>
                       ) : (
                         <p>No participants found</p>
@@ -1090,6 +1136,79 @@ const filteredParticipants = getFilteredParticipants();
           </div>
         )}
       </main>
+      {isPopupVisible && (
+        <div className="popup">
+          <div className="popup-content">
+            <RxExitFullScreen
+              size={30}
+              color="red"
+              className="close-popup"
+              onClick={handleClosePopup}
+            />
+
+            <h2>{popupEventDetails}</h2>
+            <div className="history-func">
+              <button
+                onClick={() =>
+                  handleDownloadPDF(
+                    popupEventDetails,
+                    historySearchResult.length > 0
+                      ? historySearchResult
+                      : eventDetails.participants
+                  )
+                }
+              >
+                Download PDF
+              </button>
+              <button
+                onClick={() => handlePrint(popupEventDetails)}
+                className="print-btn"
+              >
+                Print
+              </button>
+              <input
+                type="text"
+                placeholder="Search by ID, name, course, or year"
+                value={historySearchQuery}
+                onChange={(e) => setHistorySearchQuery(e.target.value)}
+              />
+              <button onClick={handleClearSearch}>Clear</button>
+              <button onClick={handleHistorySearch}>Search</button>
+            </div>
+            {eventDetails && eventDetails.participants && (
+              <div id="print-section">
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Gender</th>
+                      <th>Student ID</th>
+                      <th>Course</th>
+                      <th>Year</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(historySearchResult.length > 0
+                      ? historySearchResult
+                      : eventDetails.participants
+                    ).map((participant) => (
+                      <tr key={participant._id}>
+                        <td>{participant.name}</td>
+                        <td>{participant.gender}</td>
+                        <td>{participant.studentId}</td>
+                        <td>{participant.course}</td>
+                        <td>{participant.year}</td>
+                        <td>{participant.time}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
